@@ -25,6 +25,7 @@
       <%= image_tag "logo.jpg", alt: "Logo", style: "width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--orange)" %>
       <div class="nav-name">
         <span data-bakery="nom"></span>
+              Boulangerie Sainte Périne
         <small>Boulangerie Gourmande</small>
       </div>
     </div>
@@ -197,7 +198,7 @@
             <span class="badge badge-g">Disponible</span>
           </div>
           <p>Commandez via Deliveroo — livraison rapide dans votre arrondissement. 7j/7.</p>
-          <a data-bakery="deliveroo" target="_blank" class="btn-dlv">🛵 Commander sur Deliveroo</a>
+          <a href="https://deliveroo.fr" target="_blank" class="btn-dlv">🛵 Commander sur Deliveroo</a>
         </div>
         <div class="cc-card">
           <div class="cc-card-head">
@@ -205,7 +206,7 @@
             <span class="badge badge-o">Classique</span>
           </div>
           <p>Notre équipe prend votre commande du lundi au samedi dès 07h30.</p>
-          <a data-bakery="tel" href="#" class="btn-orange">📞 <span data-bakery="tel"></span></a>
+          <a href="<%= @bakery[:phone_href] %>" class="btn-orange">📞 <%= @bakery[:phone] %></a>
         </div>
       </div>
     </div>
@@ -218,33 +219,43 @@
 
       <div>
         <div class="info-h">Horaires</div>
-        <!-- Rempli dynamiquement -->
-        <div class="hrows" id="horaires-list"></div>
+        <div class="hrows">
+          <% @hours.each do |day, hours| %>
+            <div class="hrow">
+              <span class="hjour"><%= day %></span>
+              <span class="<%= "hferme" if hours == "Fermé" %>"><%= hours %></span>
+            </div>
+          <% end %>
+        </div>
       </div>
 
       <div>
         <div class="info-h">Contact &amp; Accès</div>
         <div class="crows">
-          <div class="crow">📍 <span data-bakery="adresse"></span></div>
-          <div class="crow">📞 <span><a data-bakery="tel" href="#">chargement…</a></span></div>
-          <div class="crow">✉️ <span><a data-bakery="email" href="#">chargement…</a></span></div>
-          <div class="crow">🚇 <span data-bakery="metro"></span></div>
-          <div class="crow">🅿️ <span data-bakery="parking"></span></div>
+          <div class="crow">📍 <span><%= @bakery[:address] %></span></div>
+          <div class="crow">📞 <span><a href="<%= @bakery[:phone_href] %>"><%= @bakery[:phone] %></a></span></div>
+          <div class="crow">✉️ <span><a href="mailto:<%= @bakery[:email] %>"><%= @bakery[:email] %></a></span></div>
+          <div class="crow">🚇 <span><%= @bakery[:metro] %></span></div>
+          <div class="crow">🅿️ <span><%= @bakery[:parking] %></span></div>
         </div>
       </div>
 
       <div>
         <div class="info-h">Nos services</div>
-        <div class="slist" id="services-list"></div>
+        <div class="slist">
+          <% @services.each do |service| %>
+            <div class="sitem"><span class="sdot"></span><%= service %></div>
+          <% end %>
+        </div>
       </div>
 
     </div>
 
     <!-- MAP -->
     <div style="margin-top:4rem;border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative">
-      <iframe id="map-iframe" src="" width="100%" height="260" style="border:0;display:block" allowfullscreen=""
+      <iframe id="map-iframe" src="<%= @bakery[:map_embed] %>" width="100%" height="260" style="border:0;display:block" allowfullscreen=""
         loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      <a id="map-link" href="#" target="_blank"
+      <a id="map-link" href="<%= @bakery[:map_url] %>" target="_blank"
         style="position:absolute;bottom:1rem;right:1rem;background:var(--orange);color:#fff;font-family:var(--sans);font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.65rem 1.3rem;border-radius:999px;text-decoration:none;display:flex;align-items:center;gap:.4rem;box-shadow:0 4px 16px rgba(0,0,0,.2);transition:background .2s"
         onmouseover="this.style.background='#F5A623'" onmouseout="this.style.background='var(--orange)'">
         🧭 Itinéraire →
@@ -255,15 +266,18 @@
   <!-- FOOTER -->
   <footer>
     <div>
-      <div class="ft-brand"><em data-bakery="nom"></em></div>
-      <div class="ft-sub" data-bakery="footer-sub"></div>
+      <div class="ft-brand"><em>Boulangerie Sainte Périne</em></div>
+      <div class="ft-sub">Artisan boulanger depuis 1987 · Paris 16e</div>
     </div>
     <ul class="ft-links">
-      <li><a href="#produits">Produits</a></li>
-      <li><a href="#commander">Commander</a></li>
-      <li><a href="#infos">Accès</a></li>
+      <li><%= link_to "Produits", root_path(anchor: "produits") %></li>
+      <li><%= link_to "Commander", root_path(anchor: "commander") %></li>
+      <li><%= link_to "Accès", root_path(anchor: "infos") %></li>
     </ul>
-    <div class="ft-copy">© 2025 <span data-bakery="nom"></span><br><span data-bakery="adresse"></span></div>
+    <div class="ft-copy">
+      © <%= Time.current.year %> Boulangerie Sainte Périne<br>
+      118 avenue de Versailles, 75016 Paris
+    </div>
   </footer>
 
   <!-- MODAL PANIER -->
