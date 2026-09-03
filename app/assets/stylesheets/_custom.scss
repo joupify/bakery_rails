@@ -1075,3 +1075,39 @@
     select.f-input {
       background-color: #2a1a0e;
     }
+
+    .cart-page {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .reservation-form {
+      max-width: 760px;
+    }
+
+    .reservation-form .f-input {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--dark);
+    }
+
+    .reservation-form select.f-input {
+      background-color: var(--white);
+    }
+
+    .pickup-input {
+      min-height: 3.5rem;
+      font-size: 1.1rem;
+      padding: .9rem 1rem;
+      color-scheme: light;
+    }
+
+    .form-errors {
+      max-width: 760px;
+      margin-bottom: 1.5rem;
+      padding: .9rem 1rem;
+      border: 1px solid #ff8080;
+      color: #b42318;
+      background: #fff1f0;
+      border-radius: 8px;
+    }

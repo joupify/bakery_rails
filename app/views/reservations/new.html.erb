@@ -1,0 +1,27 @@
+<main class="sec sec-white">
+  <span class="sec-lbl">Dernière étape</span>
+  <h1 class="sec-h2">Réserver ma commande</h1>
+
+  <%= form_with model: @reservation, local: true, class: "reservation-form" do |form| %>
+    <% if @reservation.errors.any? %>
+      <div class="form-errors"><%= @reservation.errors.full_messages.to_sentence %></div>
+    <% end %>
+
+    <div class="f-block">
+      <%= form.label :pickup_time, "Heure de retrait" %>
+      <%= form.datetime_local_field :pickup_time, class: "f-input pickup-input", required: true, step: 60 %>
+    </div>
+
+    <div class="f-block">
+      <%= form.label :payment_method, "Mode de paiement" %>
+      <%= form.select :payment_method, [["Paiement en boutique", "pay_at_store"], ["Paiement en ligne", "stripe"]], {}, class: "f-input" %>
+    </div>
+
+    <div class="f-block">
+      <%= form.label :comment, "Commentaire" %>
+      <%= form.text_area :comment, rows: 4, class: "f-input" %>
+    </div>
+
+    <%= form.submit "Confirmer la réservation", class: "btn-orange" %>
+  <% end %>
+</main>

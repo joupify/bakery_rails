@@ -1,0 +1,20 @@
+<main class="sec sec-white">
+  <span class="sec-lbl">Confirmation</span>
+  <h1 class="sec-h2">Réservation #<%= @reservation.id %></h1>
+  <p>Statut : <%= @reservation.status %></p>
+  <p>Retrait : <%= l(@reservation.pickup_time, format: :long) %></p>
+
+  <div class="cart-items">
+    <% @reservation.reservation_items.each do |item| %>
+      <article class="citem">
+        <span class="citem-name"><%= item.quantity %>x <%= item.product.name %></span>
+        <span class="citem-price"><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %></span>
+      </article>
+    <% end %>
+  </div>
+
+  <div class="cart-total">
+    <span>Total</span>
+    <span><%= number_to_currency(@reservation.total_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %></span>
+  </div>
+</main>

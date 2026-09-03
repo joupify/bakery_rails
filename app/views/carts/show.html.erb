@@ -1,0 +1,39 @@
+<main class="sec sec-white cart-page">
+  <span class="sec-lbl">Votre commande</span>
+  <h1 class="sec-h2">Votre panier</h1>
+
+  <% if @items.empty? %>
+    <p>Votre panier est vide.</p>
+  <% else %>
+    <div class="cart-items">
+      <% @items.each do |item| %>
+        <article class="citem">
+          <div>
+            <div class="citem-name"><%= item.product.name %></div>
+            <div class="citem-price">
+              <%= number_to_currency(item.product.price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %>
+            </div>
+          </div>
+          <div class="qty">
+            <% if item.quantity > 1 %>
+              <%= button_to "−", update_quantity_cart_path(product_id: item.product_id, quantity: item.quantity - 1), method: :patch, class: "qbtn" %>
+            <% else %>
+              <%= button_to "−", remove_item_cart_path(product_id: item.product_id), method: :delete, class: "qbtn" %>
+            <% end %>
+            <span class="qval"><%= item.quantity %></span>
+            <%= button_to "+", update_quantity_cart_path(product_id: item.product_id, quantity: item.quantity + 1), method: :patch, class: "qbtn" %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+
+    <div class="cart-total">
+      <span>Total</span>
+      <span><%= number_to_currency(@total_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %></span>
+    </div>
+
+    <%= link_to "Réserver cette commande", new_reservation_path, class: "btn-orange" %>
+  <% end %>
+
+  <%= link_to "Continuer mes achats", products_path, class: "btn-orange" %>
+</main>

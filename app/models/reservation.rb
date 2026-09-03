@@ -1,5 +1,7 @@
 class Reservation < ApplicationRecord
   belongs_to :user
+  has_many :reservation_items, dependent: :destroy
+  has_many :products, through: :reservation_items
 
   enum :status, {
     pending: 0,
@@ -17,4 +19,5 @@ class Reservation < ApplicationRecord
 
   validates :total_cents, numericality: { greater_than_or_equal_to: 0 }
   validates :pickup_time, presence: true
+  validates :reservation_items, presence: true
 end

@@ -62,3 +62,5 @@ end
 gem "cssbundling-rails", "~> 1.4"
 
 gem "devise", "~> 5.0"
+
+gem "stripe", "~> 19.6"
