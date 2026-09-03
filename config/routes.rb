@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  devise_for :users
+  get "/products", to: "product#index", as: :products
   get "product/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
