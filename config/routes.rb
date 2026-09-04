@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   end
   resources :reservations, only: [:new, :create, :show] do
     member do
-      post :checkout
+      get :checkout
     end
   end
   post "/stripe/webhook", to: "stripe_webhooks#create"

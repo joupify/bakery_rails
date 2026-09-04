@@ -22,6 +22,12 @@
       <%= form.text_area :comment, rows: 4, class: "f-input" %>
     </div>
 
-    <%= form.submit "Confirmer la réservation", class: "btn-orange" %>
+    <div class="form-actions">
+      <!-- Bouton pour paiement en boutique (vide le panier) -->
+      <%= form.submit "Confirmer et payer en boutique", class: "btn-orange", name: "payment_action", value: "pay_at_store" %>
+      
+      <!-- Bouton pour Stripe (ne vide PAS le panier) -->
+<%= form.submit "Payer en ligne avec Stripe", class: "btn-stripe", name: "payment_action", value: "stripe", data: { turbo: false } %>
+    </div>
   <% end %>
 </main>

@@ -1,29 +1,25 @@
-class StripeWebhooksController < ApplicationController
-  skip_forgery_protection
+class WebhooksController < ApplicationController
+  # skip_before_action :authenticate_user!
+  skip_before_action :verify_authenticity_token
 
-  def create
-    payload = request.raw_post
-    signature = request.headers["Stripe-Signature"]
 
-    stripe_event = Stripe::Webhook.construct_event(
-      payload,
-      signature,
-      ENV.fetch("STRIPE_WEBHOOK_SECRET")
-    )
 
-    event = Event.find_or_create_by!(stripe_event_id: stripe_event.id) do |record|
-      record.source = "stripe"
-      record.request_body = payload
-      record.event_type = stripe_event.type
-      record.status = :pending
-    end
+  # crée un nouvel événement à chaque fois qu'un webhook est reçu
+ def create
+  event = Event.create(
+    request_body: request.raw_post,
+    source: params[:source] || 'stripe',
+    event_type: 'unknown',
+    status: :pending
+  )
 
-    EventJob.perform_later(event) if event.pending? || event.failed?
-    head :ok
-  rescue JSON::ParserError, Stripe::SignatureVerificationError => error
-    Rails.logger.warn("Invalid Stripe webhook: #{error.message}")
-    head :bad_request
-  rescue ActiveRecord::RecordNotUnique
-    head :ok
+  if event.persisted?
+    EventJob.perform_later(event)
+    render json: { message: "success" }
+  else
+    Rails.logger.error("Erreur création Event: #{event.errors.full_messages.join(', ')}")
+    render json: { error: event.errors.full_messages }, status: :unprocessable_entity
   end
+end
+
 end

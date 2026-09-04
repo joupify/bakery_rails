@@ -13,33 +13,35 @@ class ReservationsController < ApplicationController
   end
 
   def create
-    if @cart.items.empty?
-      redirect_to cart_path, alert: "Votre panier est vide."
-      return
-    end
-
-    @reservation = current_user.reservations.build(reservation_params)
-    @reservation.total_cents = @cart.items.sum { |item| item.product.price_cents * item.quantity }
-
-    @cart.items.each do |cart_item|
-      @reservation.reservation_items.build(
-        product: cart_item.product,
-        quantity: cart_item.quantity,
-        unit_price_cents: cart_item.product.price_cents
-      )
-    end
-
-    if @reservation.save
-      @cart.items.destroy_all
-      if @reservation.stripe?
-        redirect_to checkout_reservation_path(@reservation)
-      else
-        redirect_to reservation_path(@reservation), notice: "Réservation créée avec succès."
-      end
-    else
-      render :new, status: :unprocessable_entity
-    end
+  if @cart.items.empty?
+    redirect_to cart_path, alert: "Votre panier est vide."
+    return
   end
+
+  @reservation = current_user.reservations.build(reservation_params)
+  @reservation.total_cents = @cart.items.sum { |item| item.product.price_cents * item.quantity }
+
+  @cart.items.each do |cart_item|
+    @reservation.reservation_items.build(
+      product: cart_item.product,
+      quantity: cart_item.quantity,
+      unit_price_cents: cart_item.product.price_cents
+    )
+  end
+
+  if @reservation.save
+    # 👇 NE VIDER LE PANIER QUE POUR LE PAIEMENT EN BOUTIQUE
+    if params[:payment_action] == "pay_at_store"
+      @cart.items.destroy_all
+      redirect_to reservation_path(@reservation), notice: "Réservation créée avec succès."
+    else
+      # Stripe - NE PAS VIDER LE PANIER
+      redirect_to checkout_reservation_path(@reservation)
+    end
+  else
+    render :new, status: :unprocessable_entity
+  end
+end
 
   def show
     @reservation = current_user.reservations.includes(reservation_items: :product).find(params[:id])

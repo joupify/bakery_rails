@@ -77,6 +77,9 @@ GEM
       uri (>= 0.13.1)
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
+    annotaterb (4.24.0)
+      activerecord (>= 6.0.0)
+      activesupport (>= 6.0.0)
     ast (2.4.3)
     base64 (0.3.0)
     bcrypt (3.1.22)
@@ -111,6 +114,10 @@ GEM
       railties (>= 7.0)
       responders
       warden (~> 1.2.3)
+    dotenv (3.2.0)
+    dotenv-rails (3.2.0)
+      dotenv (= 3.2.0)
+      railties (>= 6.1)
     drb (2.2.3)
     erb (6.0.7)
     error_highlight (0.7.0)
@@ -346,12 +353,14 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  annotaterb (~> 4.24)
   bootsnap
   brakeman
   capybara
   cssbundling-rails (~> 1.4)
   debug
   devise (~> 5.0)
+  dotenv-rails
   error_highlight (>= 0.4.0)
   importmap-rails
   jbuilder

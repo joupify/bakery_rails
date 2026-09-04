@@ -48,6 +48,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  gem 'dotenv-rails', groups: [:development, :test]
 
   # Highlight the fine-grained location where an error occurred [https://github.com/ruby/error_highlight]
   gem "error_highlight", ">= 0.4.0", platforms: [ :ruby ]
@@ -64,3 +65,5 @@ gem "cssbundling-rails", "~> 1.4"
 gem "devise", "~> 5.0"
 
 gem "stripe", "~> 19.6"
+
+gem "annotaterb", "~> 4.24", :group => :development
