@@ -59,12 +59,13 @@ class EventJob < ApplicationJob
       Rails.logger.info "=== WEBHOOK REÇU ==="
       Rails.logger.info "Session ID from Stripe: #{checkout_session.id}"
       Rails.logger.info "Payment Intent from Stripe: #{checkout_session.payment_intent}"
+      Rails.logger.info "Metadata: #{checkout_session.metadata}"
       
-      # 🔥 Remplacer Order par Reservation
+      # 🔥 CHANGEMENT 1: Utiliser Reservation au lieu de Order
       reservation = Reservation.find_by(stripe_session_id: checkout_session.id)
       
-      # Fallback: Chercher via metadata
-      if reservation.nil? && checkout_session.metadata.present?
+      # 🔥 CHANGEMENT 2: Fallback via metadata
+      if reservation.nil? && checkout_session.metadata && checkout_session.metadata.reservation_id
         reservation = Reservation.find_by(id: checkout_session.metadata.reservation_id)
         if reservation
           reservation.update(stripe_session_id: checkout_session.id)
@@ -72,39 +73,38 @@ class EventJob < ApplicationJob
       end
 
       if reservation.nil?
-        Rails.logger.error "❌ Réservation introuvable. SessionID: #{checkout_session.id}, Metadata: #{checkout_session.metadata}"
+        Rails.logger.error "Reservation introuvable. SessionID: #{checkout_session.id}, Metadata: #{checkout_session.metadata}"
         raise "Réservation non trouvée"
       end
 
-      # ✅ Vider le panier
+      # 🔥 CHANGEMENT 3: Vider le panier
       if reservation.user&.cart
+        items_count = reservation.user.cart.items.count
         reservation.user.cart.items.destroy_all
-        Rails.logger.info "✅ Panier vidé pour la réservation #{reservation.id}"
+        Rails.logger.info "Panier vidé pour la réservation #{reservation.id} (#{items_count} items supprimés)"
       end
 
-      # ✅ Mettre à jour le statut
+      # 🔥 CHANGEMENT 4: Mettre à jour le statut (paid au lieu de :paid)
       reservation.update!(status: :paid)
-      Rails.logger.info "✅ Réservation #{reservation.id} marquée comme payée"
+      Rails.logger.info "Réservation #{reservation.id} marquée comme payée"
+      
+      Rails.logger.info "Reservations in DB: #{Reservation.pluck(:stripe_session_id)}"
 
     when "checkout.session.expired"
       checkout_session = event.data.object
+      # 🔥 CHANGEMENT: Reservation au lieu de Order
       reservation = Reservation.find_by(stripe_session_id: checkout_session.id)
-      
       if reservation.nil?
-        raise "Aucune réservation trouvée avec l'ID de session: #{checkout_session.id}"
+        raise "No Reservation Found with Checkout Session ID: #{checkout_session.id}"
       end
-      
       reservation.update(status: :cancelled)
-      Rails.logger.info "⏰ Réservation #{reservation.id} expirée"
 
     when "identity_verification_session_verified"
       session = event.data.object
       user = User.find_by(id: session.metadata.user_id)
-      
       if user.nil?
-        raise "Aucun utilisateur trouvé avec l'ID: #{session.metadata.user_id}"
+        raise "No User found with this ID: #{session.metadata.user_id}"
       end
-      
       if session.status == "verified"
         user.update(identity_verified: true)
       else
@@ -113,17 +113,16 @@ class EventJob < ApplicationJob
 
     when "charge.refunded"
       charge = event.data.object
+      # 🔥 CHANGEMENT: Reservation au lieu de Order
       reservation = Reservation.find_by(stripe_session_id: charge.payment_intent)
-      
       if reservation.nil?
-        raise "Aucune réservation trouvée avec Payment Intent ID: #{charge.payment_intent}"
+        raise "No Reservation Found with Payment Intent ID: #{charge.payment_intent}"
       end
-      
       reservation.update(status: :cancelled)
-      Rails.logger.info "🔄 Réservation #{reservation.id} remboursée"
+      
+      puts "Payment Intent ID: #{charge.payment_intent}"
+      puts "Reservation Metadata: #{reservation.metadata}" if reservation.respond_to?(:metadata)
 
-    else
-      Rails.logger.info "Événement Stripe non géré: #{event.type}"
     end
   end
 end

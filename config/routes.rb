@@ -10,7 +10,9 @@ Rails.application.routes.draw do
       get :checkout
     end
   end
-  post "/stripe/webhook", to: "stripe_webhooks#create"
+  get 'checkout_success', to: 'reservations#checkout_success'
+
+  post "/stripe/webhook", to: "webhooks#create"
   get "/products", to: "product#index", as: :products
   get "product/index"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
