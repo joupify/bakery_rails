@@ -57,11 +57,12 @@ products = [
 ]
 
 products.each do |attributes|
-  Product.find_or_create_by!(name: attributes[:name]) do |product|
-    product.description = attributes[:description]
-    product.price_cents = attributes[:price_cents]
-    product.image = attributes[:image]  # 👈 Utiliser la colonne existante
-  end
+  product = Product.find_or_initialize_by(name: attributes[:name])
+  product.description = attributes[:description]
+  product.price_cents = attributes[:price_cents]
+  product.image = attributes[:image]
+  product.save!
+end
 end
 
 puts "#{Product.count} produits présents."
