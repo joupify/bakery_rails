@@ -1,20 +1,66 @@
+<!-- app/views/reservations/show.html.erb -->
 <main class="sec sec-white">
-  <span class="sec-lbl">Confirmation</span>
-  <h1 class="sec-h2">Réservation #<%= @reservation.id %></h1>
-  <p>Statut : <%= @reservation.status %></p>
-  <p>Retrait : <%= l(@reservation.pickup_time, format: :long) %></p>
-
-  <div class="cart-items">
-    <% @reservation.reservation_items.each do |item| %>
-      <article class="citem">
-        <span class="citem-name"><%= item.quantity %>x <%= item.product.name %></span>
-        <span class="citem-price"><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %></span>
-      </article>
+  <div class="confirmation-card">
+    <% if @reservation.paid? %>
+      <div class="status-badge success">
+        <svg>...</svg>
+        ✅ Paiement confirmé
+      </div>
+    <% elsif @reservation.pending? && @reservation.pay_at_store? %>
+      <div class="status-badge pending">
+        ⏳ En attente de paiement en magasin
+      </div>
+    <% else %>
+      <div class="status-badge warning">
+        ⏳ En attente de confirmation
+      </div>
     <% end %>
-  </div>
 
-  <div class="cart-total">
-    <span>Total</span>
-    <span><%= number_to_currency(@reservation.total_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %></span>
+    <h1 class="confirmation-title">🎉 Merci pour votre commande !</h1>
+    <p class="confirmation-subtitle">Réservation #<%= @reservation.id %></p>
+
+    <div class="order-details">
+      <div class="detail-row">
+        <span class="label">📅 Retrait</span>
+        <span class="value"><%= l(@reservation.pickup_time, format: :long) %></span>
+      </div>
+      <div class="detail-row">
+        <span class="label">💳 Paiement</span>
+        <span class="value"><%= @reservation.pay_at_store? ? "En boutique" : "En ligne" %></span>
+      </div>
+      <% if @reservation.comment.present? %>
+        <div class="detail-row">
+          <span class="label">📝 Commentaire</span>
+          <span class="value"><%= @reservation.comment %></span>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="items-list">
+      <h3>🛒 Votre commande</h3>
+      <% @reservation.reservation_items.each do |item| %>
+        <div class="item-row">
+          <span class="item-name"><%= item.product.name %></span>
+          <span class="item-quantity">× <%= item.quantity %></span>
+          <span class="item-price"><%= number_to_currency(item.unit_price_cents / 100.0) %></span>
+        </div>
+      <% end %>
+      <div class="total-row">
+        <strong>Total</strong>
+        <strong><%= number_to_currency(@reservation.total_cents / 100.0) %></strong>
+      </div>
+    </div>
+
+    <% if @reservation.pay_at_store? && @reservation.pending? %>
+      <div class="store-instructions">
+        <p>🏪 Présentez-vous en boutique avec cette confirmation.</p>
+        <p>💳 Paiement à effectuer sur place (espèces ou carte).</p>
+      </div>
+    <% end %>
+
+    <div class="actions">
+      <%= link_to "🏠 Retour à l'accueil", root_path, class: "btn-primary" %>
+      <%= link_to "📋 Mes réservations", mes_reservations_path, class: "btn-secondary" if user_signed_in? %>
+    </div>
   </div>
 </main>

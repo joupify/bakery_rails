@@ -7,6 +7,10 @@ class ReservationsController < ApplicationController
   before_action :set_cart
   rescue_from ActiveRecord::RecordNotFound, with: :cart_not_found
 
+  def index
+    @reservations = current_user.reservations.includes(reservation_items: :product).order(created_at: :desc)
+  end
+
   def new
     @reservation = current_user.reservations.new(
       total_cents: @cart.items.sum { |item| item.product.price_cents * item.quantity },

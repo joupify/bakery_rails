@@ -1,0 +1,71 @@
+<!-- app/views/reservations/index.html.erb -->
+<div class="container ms-4">
+  <div class="d-flex justify-content-between align-items-center py-4">
+    <h1>📋 Mes réservations</h1>
+    <%= link_to "🛒 Nouvelle commande", root_path, class: "btn-orange" %>
+  </div>
+
+  <% if @reservations.empty? %>
+    <div class="text-center py-5 bg-light rounded-3">
+      <p class="fs-5 text-secondary">🛍️ Vous n'avez pas encore de réservations.</p>
+      <%= link_to "Commander maintenant", root_path, class: "btn-orange" %>
+    </div>
+  <% else %>
+    <div class="d-flex flex-column gap-3">
+      <% @reservations.each do |reservation| %>
+        <div class="card shadow-sm">
+          <!-- Header -->
+          <div class="card-header bg-white d-flex justify-content-between align-items-center">
+            <div>
+              <strong>#<%= reservation.id %></strong>
+              <span class="text-secondary ms-3"><%= l(reservation.created_at, format: :short) %></span>
+            </div>
+            <span class="badge <%= 
+              case reservation.status
+              when 'paid' then 'bg-success'
+              when 'pending' then 'bg-warning text-dark'
+              when 'cancelled' then 'bg-danger'
+              else 'bg-secondary'
+              end
+            %>">
+              <%= reservation.status.humanize %>
+            </span>
+          </div>
+
+          <!-- Body -->
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <strong>📅 Retrait</strong><br>
+                <%= l(reservation.pickup_time, format: :long) %>
+              </div>
+              <div class="col-md-4">
+                <strong>💳 Paiement</strong><br>
+                <%= reservation.pay_at_store? ? "En boutique" : "En ligne" %>
+              </div>
+              <div class="col-md-4">
+                <strong>💰 Total</strong><br>
+                <%= number_to_currency(reservation.total_cents / 100.0) %>
+              </div>
+            </div>
+
+            <!-- Items -->
+            <div class="d-flex flex-wrap gap-1 mt-2">
+              <% reservation.reservation_items.first(3).each do |item| %>
+                <span class="badge bg-light text-dark"><%= item.product.name %> × <%= item.quantity %></span>
+              <% end %>
+              <% if reservation.reservation_items.count > 3 %>
+                <span class="badge bg-dark">+<%= reservation.reservation_items.count - 3 %></span>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="card-footer bg-white">
+            <%= link_to "Voir détails", reservation_path(reservation), class: "btn-orange" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

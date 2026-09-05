@@ -27,7 +27,7 @@
       <%= form.submit "Confirmer et payer en boutique", class: "btn-orange", name: "payment_action", value: "pay_at_store" %>
       
       <!-- Bouton pour Stripe (ne vide PAS le panier) -->
-<%= form.submit "Payer en ligne avec Stripe", class: "btn-stripe", name: "payment_action", value: "stripe", data: { turbo: false } %>
+      <%= form.submit "Payer en ligne avec Stripe", class: "btn-orange", name: "payment_action", value: "stripe", data: { turbo: false } %>
     </div>
-  <% end %>
+      <% end %>
 </main>
