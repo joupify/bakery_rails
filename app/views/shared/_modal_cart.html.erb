@@ -1,0 +1,28 @@
+<!-- app/views/shared/_modal_cart.html.erb -->
+<!-- MODAL PANIER -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeCart()">
+  <div class="modal">
+    <button class="modal-close" onclick="closeCart()">✕</button>
+    <div class="modal-title">Votre panier</div>
+    <div class="modal-sub">Récupération en boutique · <span data-bakery="adresse"></span></div>
+    <div class="cart-items" id="citems">
+      <p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">Votre panier est vide</p>
+    </div>
+    <div class="cart-total">
+      <span>Total</span>
+      <span id="ct">0,00 €</span>
+    </div>
+    <a href="#" id="sbtn" class="stripe-btn">
+      Payer en ligne · Stripe →
+    </a>
+    <div class="stripe-note">
+      🔒 Paiement 100% sécurisé par Stripe — CB, Apple Pay, Google Pay
+    </div>
+    <div style="margin-top:1.5rem;text-align:center">
+      <a href="#" onclick="toggleReservationForm();closeCart();return false"
+        style="font-size:.72rem;color:var(--muted);text-decoration:underline">
+        Ou réserver sans payer →
+      </a>
+    </div>
+  </div>
+</div>

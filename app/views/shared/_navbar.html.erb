@@ -1,0 +1,51 @@
+<!-- app/views/shared/_navbar.html.erb -->
+<nav>
+  <div class="nav-brand">
+    <%= link_to root_path do %>
+      <%= image_tag "logo.jpg", alt: "Logo", style: "width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--orange)" %>
+      <div class="nav-name">
+        Boulangerie Sainte Périne
+        <small>Boulangerie Gourmande</small>
+      </div>
+    <% end %>
+  </div>
+  
+  <ul class="nav-links">
+    <!-- ✅ Liens qui redirigent vers l'accueil + ancre -->
+    <li><%= link_to "Nos produits", root_path(anchor: "produits") %></li>
+    <li><%= link_to "Commander", root_path(anchor: "commander") %></li>
+    <li><%= link_to "Horaires", root_path(anchor: "infos") %></li>
+    
+    <% if user_signed_in? %>
+      <li><%= link_to "📋 Mes réservations", mes_reservations_path %></li>
+      <li><%= link_to "🚪 Déconnexion", destroy_user_session_path, data: { turbo_method: :delete } %></li>
+    <% else %>
+      <li><%= link_to "🔑 Connexion", new_user_session_path %></li>
+      <li><%= link_to "📝 Inscription", new_user_registration_path %></li>
+    <% end %>
+  </ul>
+
+  <%= link_to cart_path, class: "nav-cart" do %>
+    🛒 Panier <span id="cb" class="cart-badge">0</span>
+  <% end %>
+  
+  <button class="nav-burger" aria-label="Menu" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MENU MOBILE DRAWER -->
+<nav class="nav-mobile" id="navMobile">
+  <%= link_to "Nos produits", root_path(anchor: "produits"), onclick: "closeMobileMenu()" %>
+  <%= link_to "Commander", root_path(anchor: "commander"), onclick: "closeMobileMenu()" %>
+  <%= link_to "Horaires", root_path(anchor: "infos"), onclick: "closeMobileMenu()" %>
+  <%= link_to "🛒 Panier", cart_path, class: "nav-mobile-cart" %>
+  
+  <% if user_signed_in? %>
+    <%= link_to "📋 Mes réservations", mes_reservations_path, onclick: "closeMobileMenu()" %>
+    <%= link_to "🚪 Déconnexion", destroy_user_session_path, data: { turbo_method: :delete }, onclick: "closeMobileMenu()" %>
+  <% else %>
+    <%= link_to "🔑 Connexion", new_user_session_path, onclick: "closeMobileMenu()" %>
+    <%= link_to "📝 Inscription", new_user_registration_path, onclick: "closeMobileMenu()" %>
+  <% end %>
+</nav>

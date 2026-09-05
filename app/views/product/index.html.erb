@@ -1,335 +1,236 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!-- app/views/product/index.html.erb -->
+<%= render "shared/toast" %>
+<%= render "shared/navbar" %>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Boulangerie — Paris</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
-    rel="stylesheet">
-</head>
-
-<body>
-
-  <!-- TOAST -->
-  <div id="toast"
-    style="position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);background:var(--dark);color:#fff;padding:.7rem 1.5rem;border-radius:999px;font-size:.78rem;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none">
-    ✓ Ajouté au panier
-  </div>
-
-  <!-- NAV -->
-  <nav>
-    <div class="nav-brand">
-      <%= image_tag "logo.jpg", alt: "Logo", style: "width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--orange)" %>
-      <div class="nav-name">
-        <span data-bakery="nom"></span>
-              Boulangerie Sainte Périne
-        <small>Boulangerie Gourmande</small>
-      </div>
-    </div>
-    <ul class="nav-links">
-      <li><a href="#produits">Nos produits</a></li>
-      <li><a href="#commander">Commander</a></li>
-      <li><a href="#infos">Horaires</a></li>
-      <!-- app/views/layouts/application.html.erb -->
-<nav class="navbar">
-  <div class="container">
-    
-    <div class="nav-links">
-      
-      <% if user_signed_in? %>
-        <%= link_to " Mes réservations", mes_reservations_path, class: "nav-link" %>
-        <%= link_to " Déconnexion", destroy_user_session_path, data: { turbo_method: :delete }, class: "nav-link" %>
-      <% else %>
-        <%= link_to "🔑 Connexion", new_user_session_path, class: "nav-link" %>
-        <%= link_to "📝 Inscription", new_user_registration_path, class: "nav-link" %>
-      <% end %>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg" style="background-image:url('<%= asset_path("image_1.jpg") %>')"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Artisan Boulanger · Paris 16e · Depuis 1987</div>
+    <h1 class="hero-h1">Du pain,<br>du soin,<br><em>du vrai.</em></h1>
+    <p class="hero-p">Façonné chaque matin avec des farines d'exception et un levain vivant, notre pain porte l'âme du
+      quartier Sainte Périne.</p>
+    <div class="hero-btns">
+      <a href="#produits" class="btn-orange">Voir nos produits →</a>
+      <a href="#commander" class="btn-ghost">Commander en ligne</a>
     </div>
   </div>
-</nav>
-    </ul>
+</section>
 
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track" id="marquee-track"></div>
+</div>
 
-
-
-
-    <%= link_to cart_path, class: "nav-cart" do %>
-      🛒 Panier <span id="cb" class="cart-badge">0</span>
-    <% end %>
-    <button class="nav-burger" aria-label="Menu" onclick="toggleMobileMenu()">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-
-  <!-- MENU MOBILE DRAWER -->
-  <nav class="nav-mobile" id="navMobile">
-    <a href="#produits" onclick="closeMobileMenu()">Nos produits</a>
-    <a href="#commander" onclick="closeMobileMenu()">Commander</a>
-    <a href="#infos" onclick="closeMobileMenu()">Horaires</a>
-    <%= link_to "🛒 Panier", cart_path, class: "nav-mobile-cart" %>
-  </nav>
-
-  <!-- HERO -->
-  <section class="hero">
-    <div class="hero-bg" style="background-image:url('<%= asset_path("image_1.jpg") %>')"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <div class="hero-tag">Artisan Boulanger · Paris 16e · Depuis 1987</div>
-      <h1 class="hero-h1">Du pain,<br>du soin,<br><em>du vrai.</em></h1>
-      <p class="hero-p">Façonné chaque matin avec des farines d'exception et un levain vivant, notre pain porte l'âme du
-        quartier Sainte Périne.</p>
-      <div class="hero-btns">
-        <a href="#produits" class="btn-orange">Voir nos produits →</a>
-        <a href="#commander" class="btn-ghost">Commander en ligne</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- MARQUEE -->
-  <div class="marquee">
-    <div class="marquee-track" id="marquee-track"></div>
-  </div>
-
-  <!-- PRODUITS -->
-  <section class="sec sec-white" id="produits">
-    <div class="produits-header">
-      <div>
-        <span class="sec-lbl">Notre sélection</span>
-        <h2 class="sec-h2">Une carte <em>courte</em><br>et très photogénique.</h2>
-      </div>
-      <p>Préparés chaque matin dans notre laboratoire, visible depuis la boutique.</p>
-    </div>
-    <div class="grid" id="produits-grid">
-      <% @products.each do |product| %>
-        <article class="pcard">
-          <% if product.image.present? %>
-            <%= image_tag product.image, alt: product.name %>
-          <% end %>
-          <div class="pcard-body">
-            <div class="pcard-name"><%= product.name %></div>
-            <% if product.description.present? %>
-              <p class="pcard-desc"><%= product.description %></p>
-            <% end %>
-            <div class="pcard-foot">
-              <div class="pcard-prix">
-                <%= number_to_currency(product.price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %>
-              </div>
-              <%= button_to "+ Ajouter", add_product_cart_path(product_id: product.id),
-                method: :post, class: "btn-add" %>
-            </div>
-          </div>
-        </article>
-      <% end %>
-    </div>
-  </section>
-
-  <!-- CLICK & COLLECT -->
-  <section id="commander">
-    <div class="cc-wrap">
-      <div>
-        <span class="cc-lbl">Sans attente</span>
-        <h2 class="cc-h2">Click & Collect<br><em>sans queue.</em></h2>
-        <p class="cc-p">Commandez en ligne, passez récupérer à l'heure choisie. Votre commande vous attend, prête et
-          emballée.</p>
-        <div class="steps">
-          <div class="step">
-            <div class="step-n">01</div>
-            <div class="step-t"><strong>Sélectionnez vos produits</strong><span>Pain, viennoiseries, pâtisseries,
-                sandwichs…</span></div>
-          </div>
-          <div class="step">
-            <div class="step-n">02</div>
-            <div class="step-t"><strong>Choisissez votre heure</strong><span>Dès 07h30, créneaux disponibles toute la
-                journée</span></div>
-          </div>
-          <div class="step">
-            <div class="step-n">03</div>
-            <div class="step-t"><strong>Récupérez sans queue</strong><span>Votre sac vous attend au comptoir, prêt à
-                partir</span></div>
-          </div>
-        </div>
-        <button class="btn-orange" onclick="toggleReservationForm()" id="btn-reserver">
-          Réserver ma commande →
-        </button>
-
-        <!-- FORM INLINE -->
-        <div id="reservation-form"
-          style="max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .4s ease;opacity:0">
-          <div style="margin-top:2rem;border-top:1px solid rgba(255,255,255,.1);padding-top:2rem">
-            <div style="font-family:var(--serif);font-size:1.2rem;color:#fff;margin-bottom:1.2rem">Vos coordonnées</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
-              <input type="text" id="f-prenom" placeholder="Prénom *" class="f-input" />
-              <input type="text" id="f-nom" placeholder="Nom *" class="f-input" />
-            </div>
-            <input type="email" id="f-email" placeholder="Email *" class="f-input f-block" />
-            <input type="tel" id="f-tel" placeholder="Téléphone *" class="f-input f-block" />
-            <select id="f-heure" class="f-input f-block">
-              <option value="">Heure de retrait *</option>
-              <option>07h30</option>
-              <option>08h00</option>
-              <option>08h30</option>
-              <option>09h00</option>
-              <option>09h30</option>
-              <option>10h00</option>
-              <option>10h30</option>
-              <option>11h00</option>
-              <option>12h00</option>
-              <option>12h30</option>
-              <option>13h00</option>
-              <option>14h00</option>
-              <option>17h00</option>
-              <option>18h00</option>
-              <option>19h00</option>
-            </select>
-            <textarea id="f-comment" placeholder="Produits souhaités, quantités… (optionnel)" rows="3"
-              class="f-input f-block" style="resize:none"></textarea>
-            <button class="btn-orange" id="btn-submit-resa" onclick="submitReservation()"
-              style="width:100%;justify-content:center">
-              Confirmer la réservation →
-            </button>
-            <div id="f-error" style="color:#ff8080;font-size:.88rem;margin-top:.6rem;display:none"></div>
-          </div>
-        </div>
-
-        <!-- SUCCÈS RÉSERVATION -->
-        <div id="resa-success"
-          style="display:none;margin-top:2rem;border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;text-align:center">
-          <div style="font-size:3rem;margin-bottom:.75rem">✅</div>
-          <div style="font-family:var(--serif);font-size:1.4rem;color:#fff;margin-bottom:.5rem">Réservation confirmée !
-          </div>
-          <div style="font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.6">
-            Un email de confirmation vous a été envoyé.<br>Votre commande sera prête à l'heure choisie.
-          </div>
-        </div>
-      </div>
-
-      <div class="cc-cards">
-        <div class="cc-card">
-          <div class="cc-card-head">
-            <div class="cc-card-title">Paiement en ligne sécurisé</div>
-            <span class="badge badge-o">Stripe</span>
-          </div>
-          <p>Réglez en avance par carte bancaire via Stripe — paiement 100% sécurisé, confirmation immédiate.</p>
-          <button class="btn-orange" onclick="openCart()">🛒 Voir mon panier</button>
-        </div>
-        <div class="cc-card">
-          <div class="cc-card-head">
-            <div class="cc-card-title">Livraison à domicile</div>
-            <span class="badge badge-g">Disponible</span>
-          </div>
-          <p>Commandez via Deliveroo — livraison rapide dans votre arrondissement. 7j/7.</p>
-          <a href="https://deliveroo.fr" target="_blank" class="btn-dlv">🛵 Commander sur Deliveroo</a>
-        </div>
-        <div class="cc-card">
-          <div class="cc-card-head">
-            <div class="cc-card-title">Par téléphone</div>
-            <span class="badge badge-o">Classique</span>
-          </div>
-          <p>Notre équipe prend votre commande du lundi au samedi dès 07h30.</p>
-          <a href="<%= @bakery[:phone_href] %>" class="btn-orange">📞 <%= @bakery[:phone] %></a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- HORAIRES & INFOS -->
-  <section class="sec sec-white" id="infos" style="padding-bottom:0"> <span class="sec-lbl">Nous trouver</span>
-    <h2 class="sec-h2">Horaires &amp; <em>accès</em></h2>
-    <div class="infos-grid">
-
-      <div>
-        <div class="info-h">Horaires</div>
-        <div class="hrows">
-          <% @hours.each do |day, hours| %>
-            <div class="hrow">
-              <span class="hjour"><%= day %></span>
-              <span class="<%= "hferme" if hours == "Fermé" %>"><%= hours %></span>
-            </div>
-          <% end %>
-        </div>
-      </div>
-
-      <div>
-        <div class="info-h">Contact &amp; Accès</div>
-        <div class="crows">
-          <div class="crow">📍 <span><%= @bakery[:address] %></span></div>
-          <div class="crow">📞 <span><a href="<%= @bakery[:phone_href] %>"><%= @bakery[:phone] %></a></span></div>
-          <div class="crow">✉️ <span><a href="mailto:<%= @bakery[:email] %>"><%= @bakery[:email] %></a></span></div>
-          <div class="crow">🚇 <span><%= @bakery[:metro] %></span></div>
-          <div class="crow">🅿️ <span><%= @bakery[:parking] %></span></div>
-        </div>
-      </div>
-
-      <div>
-        <div class="info-h">Nos services</div>
-        <div class="slist">
-          <% @services.each do |service| %>
-            <div class="sitem"><span class="sdot"></span><%= service %></div>
-          <% end %>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- MAP -->
-    <div style="margin-top:4rem;border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative">
-      <iframe id="map-iframe" src="<%= @bakery[:map_embed] %>" width="100%" height="260" style="border:0;display:block" allowfullscreen=""
-        loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-      <a id="map-link" href="<%= @bakery[:map_url] %>" target="_blank"
-        style="position:absolute;bottom:1rem;right:1rem;background:var(--orange);color:#fff;font-family:var(--sans);font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.65rem 1.3rem;border-radius:999px;text-decoration:none;display:flex;align-items:center;gap:.4rem;box-shadow:0 4px 16px rgba(0,0,0,.2);transition:background .2s"
-        onmouseover="this.style.background='#F5A623'" onmouseout="this.style.background='var(--orange)'">
-        🧭 Itinéraire →
-      </a>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
+<!-- PRODUITS -->
+<section class="sec sec-white" id="produits">
+  <div class="produits-header">
     <div>
-      <div class="ft-brand"><em>Boulangerie Sainte Périne</em></div>
-      <div class="ft-sub">Artisan boulanger depuis 1987 · Paris 16e</div>
+      <span class="sec-lbl">Notre sélection</span>
+      <h2 class="sec-h2">Une carte <em>courte</em><br>et très photogénique.</h2>
     </div>
-    <ul class="ft-links">
-      <li><%= link_to "Produits", root_path(anchor: "produits") %></li>
-      <li><%= link_to "Commander", root_path(anchor: "commander") %></li>
-      <li><%= link_to "Accès", root_path(anchor: "infos") %></li>
-    </ul>
-    <div class="ft-copy">
-      © <%= Time.current.year %> Boulangerie Sainte Périne<br>
-      118 avenue de Versailles, 75016 Paris
-    </div>
-  </footer>
+    <p>Préparés chaque matin dans notre laboratoire, visible depuis la boutique.</p>
+  </div>
+  <div class="grid" id="produits-grid">
+    <% @products.each do |product| %>
+      <article class="pcard">
+        <% if product.image.present? %>
+          <%= image_tag product.image, alt: product.name %>
+        <% end %>
+        <div class="pcard-body">
+          <div class="pcard-name"><%= product.name %></div>
+          <% if product.description.present? %>
+            <p class="pcard-desc"><%= product.description %></p>
+          <% end %>
+          <div class="pcard-foot">
+            <div class="pcard-prix">
+              <%= number_to_currency(product.price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %>
+            </div>
+            <%= button_to "+ Ajouter", add_product_cart_path(product_id: product.id),
+              method: :post, class: "btn-add" %>
+          </div>
+        </div>
+      </article>
+    <% end %>
+  </div>
+</section>
 
-  <!-- MODAL PANIER -->
-  <div class="modal-overlay" id="modal" onclick="if(event.target===this)closeCart()">
-    <div class="modal">
-      <button class="modal-close" onclick="closeCart()">✕</button>
-      <div class="modal-title">Votre panier</div>
-      <div class="modal-sub">Récupération en boutique · <span data-bakery="adresse"></span></div>
-      <div class="cart-items" id="citems">
-        <p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">Votre panier est vide</p>
+<!-- CLICK & COLLECT -->
+<section id="commander">
+  <div class="cc-wrap">
+    <div>
+      <span class="cc-lbl">Sans attente</span>
+      <h2 class="cc-h2">Click & Collect<br><em>sans queue.</em></h2>
+      <p class="cc-p">Commandez en ligne, passez récupérer à l'heure choisie. Votre commande vous attend, prête et
+        emballée.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-n">01</div>
+          <div class="step-t"><strong>Sélectionnez vos produits</strong><span>Pain, viennoiseries, pâtisseries,
+              sandwichs…</span></div>
+        </div>
+        <div class="step">
+          <div class="step-n">02</div>
+          <div class="step-t"><strong>Choisissez votre heure</strong><span>Dès 07h30, créneaux disponibles toute la
+              journée</span></div>
+        </div>
+        <div class="step">
+          <div class="step-n">03</div>
+          <div class="step-t"><strong>Récupérez sans queue</strong><span>Votre sac vous attend au comptoir, prêt à
+              partir</span></div>
+        </div>
       </div>
-      <div class="cart-total">
-        <span>Total</span>
-        <span id="ct">0,00 €</span>
+      <button class="btn-orange" onclick="toggleReservationForm()" id="btn-reserver">
+        Réserver ma commande →
+      </button>
+
+      <!-- FORM INLINE -->
+      <div id="reservation-form"
+        style="max-height:0;overflow:hidden;transition:max-height .5s ease,opacity .4s ease;opacity:0">
+        <div style="margin-top:2rem;border-top:1px solid rgba(255,255,255,.1);padding-top:2rem">
+          <div style="font-family:var(--serif);font-size:1.2rem;color:#fff;margin-bottom:1.2rem">Vos coordonnées</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem">
+            <input type="text" id="f-prenom" placeholder="Prénom *" class="f-input" />
+            <input type="text" id="f-nom" placeholder="Nom *" class="f-input" />
+          </div>
+          <input type="email" id="f-email" placeholder="Email *" class="f-input f-block" />
+          <input type="tel" id="f-tel" placeholder="Téléphone *" class="f-input f-block" />
+          <select id="f-heure" class="f-input f-block">
+            <option value="">Heure de retrait *</option>
+            <option>07h30</option>
+            <option>08h00</option>
+            <option>08h30</option>
+            <option>09h00</option>
+            <option>09h30</option>
+            <option>10h00</option>
+            <option>10h30</option>
+            <option>11h00</option>
+            <option>12h00</option>
+            <option>12h30</option>
+            <option>13h00</option>
+            <option>14h00</option>
+            <option>17h00</option>
+            <option>18h00</option>
+            <option>19h00</option>
+          </select>
+          <textarea id="f-comment" placeholder="Produits souhaités, quantités… (optionnel)" rows="3"
+            class="f-input f-block" style="resize:none"></textarea>
+          <button class="btn-orange" id="btn-submit-resa" onclick="submitReservation()"
+            style="width:100%;justify-content:center">
+            Confirmer la réservation →
+          </button>
+          <div id="f-error" style="color:#ff8080;font-size:.88rem;margin-top:.6rem;display:none"></div>
+        </div>
       </div>
-      <a href="#" id="sbtn" class="stripe-btn">
-        Payer en ligne · Stripe →
-      </a>
-      <div class="stripe-note">
-        🔒 Paiement 100% sécurisé par Stripe — CB, Apple Pay, Google Pay
+
+      <!-- SUCCÈS RÉSERVATION -->
+      <div id="resa-success"
+        style="display:none;margin-top:2rem;border-top:1px solid rgba(255,255,255,.1);padding-top:2rem;text-align:center">
+        <div style="font-size:3rem;margin-bottom:.75rem">✅</div>
+        <div style="font-family:var(--serif);font-size:1.4rem;color:#fff;margin-bottom:.5rem">Réservation confirmée !
+        </div>
+        <div style="font-size:.9rem;color:rgba(255,255,255,.5);line-height:1.6">
+          Un email de confirmation vous a été envoyé.<br>Votre commande sera prête à l'heure choisie.
+        </div>
       </div>
-      <div style="margin-top:1.5rem;text-align:center">
-        <a href="#" onclick="toggleReservationForm();closeCart();return false"
-          style="font-size:.72rem;color:var(--muted);text-decoration:underline">
-          Ou réserver sans payer →
-        </a>
+    </div>
+
+    <div class="cc-cards">
+      <div class="cc-card">
+        <div class="cc-card-head">
+          <div class="cc-card-title">Paiement en ligne sécurisé</div>
+          <span class="badge badge-o">Stripe</span>
+        </div>
+        <p>Réglez en avance par carte bancaire via Stripe — paiement 100% sécurisé, confirmation immédiate.</p>
+        <button class="btn-orange" onclick="openCart()">🛒 Voir mon panier</button>
+      </div>
+      <div class="cc-card">
+        <div class="cc-card-head">
+          <div class="cc-card-title">Livraison à domicile</div>
+          <span class="badge badge-g">Disponible</span>
+        </div>
+        <p>Commandez via Deliveroo — livraison rapide dans votre arrondissement. 7j/7.</p>
+        <a href="https://deliveroo.fr" target="_blank" class="btn-dlv">🛵 Commander sur Deliveroo</a>
+      </div>
+      <div class="cc-card">
+        <div class="cc-card-head">
+          <div class="cc-card-title">Par téléphone</div>
+          <span class="badge badge-o">Classique</span>
+        </div>
+        <p>Notre équipe prend votre commande du lundi au samedi dès 07h30.</p>
+        <a href="<%= @bakery[:phone_href] %>" class="btn-orange">📞 <%= @bakery[:phone] %></a>
       </div>
     </div>
   </div>
+</section>
 
-</body>
+<!-- HORAIRES & INFOS -->
+<section class="sec sec-white" id="infos" style="padding-bottom:0"> <span class="sec-lbl">Nous trouver</span>
+  <h2 class="sec-h2">Horaires &amp; <em>accès</em></h2>
+  <div class="infos-grid">
 
-</html>
+    <div>
+      <div class="info-h">Horaires</div>
+      <div class="hrows">
+        <% @hours.each do |day, hours| %>
+          <div class="hrow">
+            <span class="hjour"><%= day %></span>
+            <span class="<%= "hferme" if hours == "Fermé" %>"><%= hours %></span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div>
+      <div class="info-h">Contact &amp; Accès</div>
+      <div class="crows">
+        <div class="crow">📍 <span><%= @bakery[:address] %></span></div>
+        <div class="crow">📞 <span><a href="<%= @bakery[:phone_href] %>"><%= @bakery[:phone] %></a></span></div>
+        <div class="crow">✉️ <span><a href="mailto:<%= @bakery[:email] %>"><%= @bakery[:email] %></a></span></div>
+        <div class="crow">🚇 <span><%= @bakery[:metro] %></span></div>
+        <div class="crow">🅿️ <span><%= @bakery[:parking] %></span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="info-h">Nos services</div>
+      <div class="slist">
+        <% @services.each do |service| %>
+          <div class="sitem"><span class="sdot"></span><%= service %></div>
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MAP -->
+  <div style="margin-top:4rem;border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative">
+    <iframe id="map-iframe" src="<%= @bakery[:map_embed] %>" width="100%" height="260" style="border:0;display:block" allowfullscreen=""
+      loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <a id="map-link" href="<%= @bakery[:map_url] %>" target="_blank"
+      style="position:absolute;bottom:1rem;right:1rem;background:var(--orange);color:#fff;font-family:var(--sans);font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:.65rem 1.3rem;border-radius:999px;text-decoration:none;display:flex;align-items:center;gap:.4rem;box-shadow:0 4px 16px rgba(0,0,0,.2);transition:background .2s"
+      onmouseover="this.style.background='#F5A623'" onmouseout="this.style.background='var(--orange)'">
+      🧭 Itinéraire →
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="ft-brand"><em>Boulangerie Sainte Périne</em></div>
+    <div class="ft-sub">Artisan boulanger depuis 1987 · Paris 16e</div>
+  </div>
+  <ul class="ft-links">
+    <li><%= link_to "Produits", root_path(anchor: "produits") %></li>
+    <li><%= link_to "Commander", root_path(anchor: "commander") %></li>
+    <li><%= link_to "Accès", root_path(anchor: "infos") %></li>
+  </ul>
+  <div class="ft-copy">
+    © <%= Time.current.year %> Boulangerie Sainte Périne<br>
+    118 avenue de Versailles, 75016 Paris
+  </div>
+</footer>
+
+<%= render "shared/modal_cart" %>
