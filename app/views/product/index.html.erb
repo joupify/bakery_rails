@@ -36,7 +36,7 @@
     <% @products.each do |product| %>
       <article class="pcard">
         <% if product.image.present? %>
-          <%= image_tag product.image, alt: product.name %>
+  <%= image_tag "/images/#{product.image}", alt: product.name %>
         <% end %>
         <div class="pcard-body">
           <div class="pcard-name"><%= product.name %></div>
