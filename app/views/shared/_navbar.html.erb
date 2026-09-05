@@ -1,14 +1,14 @@
 <!-- app/views/shared/_navbar.html.erb -->
 <nav>
-  <div class="nav-brand">
-    <%= link_to root_path do %>
-      <%= image_tag "logo.jpg", alt: "Logo", style: "width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--orange)" %>
-      <div class="nav-name">
-        Boulangerie Sainte Périne
-        <small>Boulangerie Gourmande</small>
-      </div>
-    <% end %>
-  </div>
+  <div class="nav-brand" style="display: flex; align-items: center; gap: 10px;">
+  <%= link_to root_path, style: "display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;" do %>
+    <%= image_tag "logo.jpg", alt: "Logo", style: "width:42px;height:42px;border-radius:50%;object-fit:cover;border:2px solid var(--orange)" %>
+    <div class="nav-name" style="display: flex; flex-direction: column; line-height: 1.2;">
+      Boulangerie Sainte Périne
+      <small style="font-size: 0.7rem; opacity: 0.7;">Boulangerie Gourmande</small>
+    </div>
+  <% end %>
+</div>
   
   <ul class="nav-links">
     <!-- ✅ Liens qui redirigent vers l'accueil + ancre -->
