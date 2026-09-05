@@ -47,6 +47,8 @@ class ReservationsController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
+    ReservationMailer.confirmation(@reservation).deliver_later
+
   end
 
   def show

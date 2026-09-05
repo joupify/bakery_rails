@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #e67e22; padding: 20px; text-align: center; color: white; }
+    .content { padding: 20px; }
+    .total { font-size: 18px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 Merci pour votre commande !</h1>
+      <p>Réservation #<%= @reservation.id %></p>
+    </div>
+    <div class="content">
+      <h3>📅 Retrait</h3>
+      <p><%= l(@reservation.pickup_time, format: :long) %></p>
+      
+      <h3>🛒 Votre commande</h3>
+      <% @items.each do |item| %>
+        <p><%= item.product.name %> × <%= item.quantity %> = <%= number_to_currency(item.unit_price_cents / 100.0) %></p>
+      <% end %>
+      <p class="total">Total : <%= number_to_currency(@reservation.total_cents / 100.0) %></p>
+      
+      <% if @reservation.pay_at_store? %>
+        <p>🏪 Paiement à effectuer en boutique.</p>
+      <% else %>
+        <p>💳 Paiement en ligne confirmé.</p>
+      <% end %>
+    </div>
+  </div>
+</body>
+</html>

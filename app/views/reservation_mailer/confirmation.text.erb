@@ -1,0 +1,17 @@
+Merci pour votre commande !
+
+Réservation #<%= @reservation.id %>
+Retrait : <%= l(@reservation.pickup_time, format: :long) %>
+
+Votre commande :
+<% @items.each do |item| %>
+  - <%= item.product.name %> × <%= item.quantity %> = <%= number_to_currency(item.unit_price_cents / 100.0) %>
+<% end %>
+
+Total : <%= number_to_currency(@reservation.total_cents / 100.0) %>
+
+<% if @reservation.pay_at_store? %>
+Paiement à effectuer en boutique.
+<% end %>
+
+Merci de votre confiance !
