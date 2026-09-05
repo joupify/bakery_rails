@@ -33,6 +33,16 @@ products = [
     name: "Poussins de Pâques",
     description: "Tartelettes citron, crème yuzu et chocolat blanc.",
     price_cents: 450
+  },
+  {
+    name: "Salade riz et poulet",
+    description: "Salade riz et poulet avec vinaigrette maison.",
+    price_cents: 700
+  },
+{
+    name: "Salade poulet avocat",
+    description: "Salade poulet avocat avec vinaigrette maison.",
+    price_cents: 650
   }
 ]
 
