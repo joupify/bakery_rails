@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   resources :reservations, only: [:new, :create, :show] do
     member do
       get :checkout
+      post :cancel
+      get :refund
+      get :expire
     end
   end
 

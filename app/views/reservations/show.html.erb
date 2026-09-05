@@ -57,10 +57,19 @@
         <p>💳 Paiement à effectuer sur place (espèces ou carte).</p>
       </div>
     <% end %>
+    
 
-    <div class="actions">
-      <%= link_to "🏠 Retour à l'accueil", root_path, class: "btn-primary" %>
-      <%= link_to "📋 Mes réservations", mes_reservations_path, class: "btn-secondary" if user_signed_in? %>
-    </div>
+<div class="actions">
+  <%= link_to "🏠 Retour à l'accueil", root_path, class: "btn-orange" %>
+  <%= link_to "📋 Mes réservations", mes_reservations_path, class: "btn-orange" if user_signed_in? %>
+  
+  <!-- Annuler uniquement pour Stripe en attente -->
+  <% if @reservation.stripe? && @reservation.pending? %>
+    <%= link_to "❌ Annuler", expire_reservation_path(@reservation), 
+                class: "btn btn-outline-danger",
+                style: "padding: 10px 20px; border-radius: 8px; border: 2px solid #dc3545; color: #dc3545; background: transparent; text-decoration: none; font-weight: 500;",
+                data: { turbo_method: :get, turbo_confirm: "Annuler cette réservation ?" } %>
+  <% end %>
+</div>
   </div>
 </main>

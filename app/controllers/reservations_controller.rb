@@ -98,6 +98,26 @@ class ReservationsController < ApplicationController
     redirect_to reservation_path(reservation), notice: 'Paiement confirmé. Merci pour votre commande !'
   end
 
+  # app/controllers/reservations_controller.rb
+# app/controllers/reservations_controller.rb
+def expire
+  reservation = current_user.reservations.find(params[:id])
+  
+  # Expirer la session Stripe
+  if reservation.stripe_session_id.present?
+    begin
+      Stripe::Checkout::Session.expire(reservation.stripe_session_id)
+    rescue => e
+      Rails.logger.error "Erreur expiration Stripe: #{e.message}"
+    end
+  end
+  
+  # Marquer la réservation comme annulée
+  reservation.update!(status: :cancelled)
+  
+  redirect_to cart_path, notice: "Session expirée. Votre panier a été conservé."
+end
+
   private
 
   def reservation_params
