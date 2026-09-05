@@ -62,7 +62,7 @@ products.each do |attributes|
   product.price_cents = attributes[:price_cents]
   product.image = attributes[:image]
   product.save!
-end
+
 end
 
 puts "#{Product.count} produits présents."
