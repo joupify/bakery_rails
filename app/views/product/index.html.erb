@@ -33,7 +33,28 @@
       <li><a href="#produits">Nos produits</a></li>
       <li><a href="#commander">Commander</a></li>
       <li><a href="#infos">Horaires</a></li>
+      <!-- app/views/layouts/application.html.erb -->
+<nav class="navbar">
+  <div class="container">
+    
+    <div class="nav-links">
+      
+      <% if user_signed_in? %>
+        <%= link_to " Mes réservations", mes_reservations_path, class: "nav-link" %>
+        <%= link_to " Déconnexion", destroy_user_session_path, data: { turbo_method: :delete }, class: "nav-link" %>
+      <% else %>
+        <%= link_to "🔑 Connexion", new_user_session_path, class: "nav-link" %>
+        <%= link_to "📝 Inscription", new_user_registration_path, class: "nav-link" %>
+      <% end %>
+    </div>
+  </div>
+</nav>
     </ul>
+
+
+
+
+
     <%= link_to cart_path, class: "nav-cart" do %>
       🛒 Panier <span id="cb" class="cart-badge">0</span>
     <% end %>
