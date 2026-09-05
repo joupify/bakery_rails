@@ -40,3 +40,5 @@
 /node_modules
 .kamal/secrets
 .kamal/secrets
+.kamal/
+.kamal/
