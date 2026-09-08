@@ -1,24 +1,39 @@
-# README
+# Bakery Rails
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Application de commande en ligne pour les commerces de proximité, avec panier,
+réservation, paiement Stripe et confirmation par e-mail.
 
-Things you may want to cover:
+## Fonctionnalités prévues pour les commerçants du quartier
 
-* Ruby version
+### Fidélisation
 
-* System dependencies
+- Carte de fidélité numérique avec points ou tampons par achat.
+- Coupons promotionnels valables sur une période ou certains créneaux.
+- Notifications pour les nouveautés, offres du jour et fermetures exceptionnelles.
 
-* Configuration
+### Visibilité locale
 
-* Database creation
+- Page dédiée à chaque commerçant avec horaires, adresse, photos, téléphone et produits.
+- Carte interactive des commerces du quartier.
+- Recherche par catégorie : boulangerie, restaurant, épicerie, coiffeur, etc.
+- Page regroupant les offres du jour des commerces locaux.
 
-* Database initialization
+### Gestion commerçant
 
-* How to run the test suite
+- Tableau de bord avec commandes, chiffre d'affaires et produits populaires.
+- Gestion des stocks avec masquage automatique des produits indisponibles.
+- Gestion des horaires, congés et fermetures exceptionnelles.
+- Export des commandes en CSV ou PDF.
 
-* Services (job queues, cache servers, search engines, etc.)
+### Communauté
 
-* Deployment instructions
+- Avis clients vérifiés après une commande.
+- Programme de parrainage.
+- Commandes groupées entre voisins.
+- Calendrier des événements du quartier.
 
-* ...
+## Prochain axe recommandé
+
+Créer un espace commerçant permettant de gérer les produits, les stocks, les
+commandes et les promotions. Cette fonctionnalité ferait de l'application un
+outil quotidien pour les commerces, au-delà d'une simple vitrine en ligne.

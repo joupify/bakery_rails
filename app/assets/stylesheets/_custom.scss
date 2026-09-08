@@ -343,6 +343,10 @@
       color: var(--orange)
     }
 
+    .reservation-title {
+      font-size: clamp(2.2rem, 4vw, 4rem);
+    }
+
     .produits-header {
       display: flex;
       justify-content: space-between;
@@ -1108,6 +1112,23 @@
       max-width: 760px;
     }
 
+    .reservation-form .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: .75rem;
+      margin-top: 1rem;
+    }
+
+    .reservation-form .form-actions .btn-orange {
+      flex: 1;
+      justify-content: center;
+      min-width: 0;
+      padding: .85rem 1rem;
+      font-size: .78rem;
+      letter-spacing: .06em;
+      white-space: nowrap;
+    }
+
     .reservation-form .f-input {
       background: var(--white);
       border: 1px solid var(--border);
@@ -1125,6 +1146,16 @@
       color-scheme: light;
     }
 
+    .pickup-fields {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem;
+    }
+
+    .pickup-date {
+      text-align: center;
+    }
+
     .form-errors {
       max-width: 760px;
       margin-bottom: 1.5rem;
@@ -1133,4 +1164,14 @@
       color: #b42318;
       background: #fff1f0;
       border-radius: 8px;
+    }
+
+    @media (max-width: 640px) {
+      .reservation-form .form-actions {
+        flex-direction: column;
+      }
+
+      .reservation-form .form-actions .btn-orange {
+        width: 100%;
+      }
     }

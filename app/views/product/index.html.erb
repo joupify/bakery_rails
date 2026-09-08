@@ -77,9 +77,9 @@
               partir</span></div>
         </div>
       </div>
-      <button class="btn-orange" onclick="toggleReservationForm()" id="btn-reserver">
+      <%= link_to root_path(anchor: "produits"), class: "btn-orange", id: "btn-reserver" do %>
         Réserver ma commande →
-      </button>
+      <% end %>
 
       <!-- FORM INLINE -->
       <div id="reservation-form"

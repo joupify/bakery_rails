@@ -37,6 +37,8 @@ class ReservationsController < ApplicationController
     end
 
     if @reservation.save
+      ReservationMailer.confirmation(@reservation).deliver_later
+
       if params[:payment_action] == "pay_at_store"
         @cart.items.destroy_all
         redirect_to reservation_path(@reservation), notice: "Réservation créée avec succès."
@@ -47,8 +49,6 @@ class ReservationsController < ApplicationController
     else
       render :new, status: :unprocessable_entity
     end
-    ReservationMailer.confirmation(@reservation).deliver_later
-
   end
 
   def show
@@ -123,7 +123,16 @@ end
   private
 
   def reservation_params
-    params.require(:reservation).permit(:pickup_time, :payment_method, :comment)
+    permitted = params.require(:reservation).permit(:pickup_date, :pickup_hour, :payment_method, :comment)
+    pickup_date = permitted[:pickup_date].to_s
+    pickup_hour = permitted[:pickup_hour].to_s
+
+    pickup_time = if pickup_date.match?(/\A\d{4}-\d{2}-\d{2}\z/) &&
+                     pickup_hour.match?(/\A(?:0[7-9]|1[0-8]):(?:00|30)\z|\A19:00\z/)
+                    Time.zone.strptime("#{pickup_date} #{pickup_hour}", "%Y-%m-%d %H:%M")
+                  end
+
+    permitted.except(:pickup_date, :pickup_hour).merge(pickup_time: pickup_time)
   end
 
   def ensure_session_id

@@ -43,4 +43,19 @@ class Reservation < ApplicationRecord
   validates :total_cents, numericality: { greater_than_or_equal_to: 0 }
   validates :pickup_time, presence: true
   validates :reservation_items, presence: true
+  validate :pickup_time_during_business_hours
+
+  private
+
+  def pickup_time_during_business_hours
+    return if pickup_time.blank?
+
+    pickup_time_of_day = pickup_time.seconds_since_midnight
+    opening_time = 7.hours
+    closing_time = 19.hours
+
+    unless pickup_time_of_day.between?(opening_time, closing_time)
+      errors.add(:pickup_time, "doit être compris entre 07h00 et 19h00")
+    end
+  end
 end

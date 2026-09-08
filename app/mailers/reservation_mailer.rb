@@ -1,6 +1,4 @@
 class ReservationMailer < ApplicationMailer
-  default from: "no-reply@bakery.com"
-
   def confirmation(reservation)
     @reservation = reservation
     @user = reservation.user

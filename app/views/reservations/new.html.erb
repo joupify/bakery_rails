@@ -1,6 +1,6 @@
 <main class="sec sec-white">
   <span class="sec-lbl">Dernière étape</span>
-  <h1 class="sec-h2">Réserver ma commande</h1>
+  <h1 class="sec-h2 reservation-title">Réserver ma commande</h1>
 
   <%= form_with model: @reservation, local: true, class: "reservation-form" do |form| %>
     <% if @reservation.errors.any? %>
@@ -9,7 +9,21 @@
 
     <div class="f-block">
       <%= form.label :pickup_time, "Heure de retrait" %>
-      <%= form.datetime_local_field :pickup_time, class: "f-input pickup-input", required: true, step: 60 %>
+      <div class="pickup-fields">
+        <%= form.date_field :pickup_date,
+          value: @reservation.pickup_time&.to_date || Date.current,
+          class: "f-input pickup-input pickup-date",
+          required: true,
+          min: Date.current %>
+        <%= form.select :pickup_hour,
+          options_for_select(
+            (7...19).flat_map { |hour| ["%02d:00" % hour, "%02d:30" % hour] } + ["19:00"],
+            @reservation.pickup_time&.strftime("%H:%M")
+          ),
+          { prompt: "Choisir une heure" },
+          class: "f-input pickup-input",
+          required: true %>
+      </div>
     </div>
 
     <div class="f-block">
@@ -19,7 +33,7 @@
 
     <div class="f-block">
       <%= form.label :comment, "Commentaire" %>
-      <%= form.text_area :comment, rows: 4, class: "f-input" %>
+      <%= form.text_area :comment, rows: 2, class: "f-input" %>
     </div>
 
     <div class="form-actions">
