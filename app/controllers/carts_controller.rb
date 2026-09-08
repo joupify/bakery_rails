@@ -7,6 +7,11 @@ class CartsController < ApplicationController
   def show
     @items = @cart.items.includes(:product)
     @total_cents = @items.sum { |item| item.product.price_cents * item.quantity }
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def add_product
@@ -14,9 +19,9 @@ class CartsController < ApplicationController
     @cart.add_product(product.id)
 
     respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to cart_path, notice: "Produit ajouté au panier." }
-    end
+    format.turbo_stream { render "add_product", formats: [:turbo_stream] }
+    format.html { redirect_to cart_path, notice: "Produit ajouté au panier." }
+  end
   end
 
   def remove_item

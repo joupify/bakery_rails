@@ -51,6 +51,8 @@ group :development do
   gem "web-console"
   gem 'dotenv-rails', groups: [:development, :test]
   gem 'letter_opener'
+    gem 'letter_opener_web'
+
 
   # Highlight the fine-grained location where an error occurred [https://github.com/ruby/error_highlight]
   gem "error_highlight", ">= 0.4.0", platforms: [ :ruby ]

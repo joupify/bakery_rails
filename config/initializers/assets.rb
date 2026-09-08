@@ -1,13 +1,15 @@
-# Be sure to restart your server when you modify this file.
-
-# Version of your assets
+# config/initializers/assets.rb
 Rails.application.config.assets.version = "1.0"
 
-# Asset paths
+# Ajouter les chemins
 Rails.application.config.assets.paths << Rails.root.join("node_modules/bootstrap-icons/font")
 Rails.application.config.assets.paths << Rails.root.join("node_modules/bootstrap/dist/js")
 
-# Precompile Bootstrap
+# ✅ Garder bootstrap.bundle.min.js
+Rails.application.config.assets.precompile << "bootstrap.bundle.min.js"
+
+# ✅ Ajouter les fichiers Turbo
 Rails.application.config.assets.precompile += %w[
-  bootstrap.bundle.min.js
+  @hotwired--turbo-rails.js
+  @hotwired--turbo.js
 ]

@@ -1,0 +1,5 @@
+<%= turbo_stream.update "cb", @cart.items.sum(:quantity) %>
+
+<%= turbo_stream.replace "modal" do %>
+  <%= render "shared/modal_cart", open: true, items: @items, total_cents: @total_cents %>
+<% end %>

@@ -36,4 +36,9 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
    root "product#index"
+
+   # config/routes.rb
+if Rails.env.development?
+  mount LetterOpenerWeb::Engine, at: "/letter_opener"
+end
 end

@@ -14,7 +14,7 @@ class ReservationsController < ApplicationController
   def new
     @reservation = current_user.reservations.new(
       total_cents: @cart.items.sum { |item| item.product.price_cents * item.quantity },
-      payment_method: :pay_at_store
+      payment_method: params[:payment_method].presence_in(%w[pay_at_store stripe]) || :pay_at_store
     )
   end
 

@@ -1,7 +1,4 @@
 <!-- app/views/product/index.html.erb -->
-<%= render "shared/toast" %>
-<%= render "shared/navbar" %>
-
 <!-- HERO -->
 <section class="hero">
   <div class="hero-bg" style="background-image:url('<%= asset_path("image_1.jpg") %>')"></div>
@@ -47,8 +44,8 @@
               <%= number_to_currency(product.price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %>
             </div>
             <%= button_to "+ Ajouter", add_product_cart_path(product_id: product.id),
-              method: :post, class: "btn-add" %>
-          </div>
+  method: :post, class: "btn-add", data: { turbo: true } %>
+          
         </div>
       </article>
     <% end %>
@@ -142,7 +139,7 @@
           <span class="badge badge-o">Stripe</span>
         </div>
         <p>Réglez en avance par carte bancaire via Stripe — paiement 100% sécurisé, confirmation immédiate.</p>
-        <button class="btn-orange" onclick="openCart()">🛒 Voir mon panier</button>
+        <%= link_to "🛒 Voir mon panier", cart_path, class: "btn-orange", data: { turbo_stream: true } %>
       </div>
       <div class="cc-card">
         <div class="cc-card-head">
@@ -231,5 +228,3 @@
     118 avenue de Versailles, 75016 Paris
   </div>
 </footer>
-
-<%= render "shared/modal_cart" %>
