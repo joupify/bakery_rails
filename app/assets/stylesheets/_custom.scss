@@ -617,6 +617,53 @@
       margin-top: 4rem
     }
 
+    .reviews-section {
+      padding-bottom: 4rem;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .review-card {
+      padding: 1.75rem;
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      background: var(--bg);
+    }
+
+    .review-stars {
+      color: var(--orange);
+      letter-spacing: .15em;
+      margin-bottom: 1rem;
+    }
+
+    .review-card p {
+      color: var(--mid);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .review-card strong,
+    .review-card span {
+      display: block;
+    }
+
+    .review-card strong {
+      color: var(--dark);
+      font-family: var(--serif);
+      font-size: 1.1rem;
+    }
+
+    .review-card span {
+      color: var(--muted);
+      font-size: .85rem;
+      margin-top: .2rem;
+    }
+
     .info-h {
       font-family: var(--serif);
       font-size: 1.2rem;
@@ -1065,6 +1112,10 @@
         gap: 3rem
       }
 
+      .reviews-grid {
+        grid-template-columns: 1fr;
+      }
+
       footer {
         flex-direction: column;
         gap: 1.2rem;
@@ -1106,6 +1157,29 @@
     .cart-page {
       max-width: 1120px;
       margin: 0 auto;
+    }
+
+    .cart-page .cart-title {
+      font-size: clamp(2.4rem, 4vw, 4.5rem);
+    }
+
+    .cart-page .citem-name {
+      font-size: .9rem;
+    }
+
+    .cart-page .citem-price,
+    .cart-page .qval {
+      font-size: .85rem;
+    }
+
+    .cart-page .cart-total-compact {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .cart-page .cart-action {
+      font-size: .82rem;
+      padding: .85rem 1.5rem;
     }
 
     .reservation-form {
