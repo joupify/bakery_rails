@@ -1,9 +1,9 @@
 <!-- app/views/shared/_modal_cart.html.erb -->
 <!-- MODAL PANIER -->
 <div class="modal-overlay <%= "open" if local_assigns[:open] %>" id="modal"
-  style="background:transparent !important;backdrop-filter:none !important;filter:none !important;align-items:center;justify-content:center">
+  style="position:fixed;inset:0;background:none !important;backdrop-filter:none !important;filter:none !important;display:<%= local_assigns[:open] ? "block" : "none" %>;pointer-events:none">
   <div class="cart-modal"
-    style="display:block;background:#fff;width:100%;max-width:520px;border-radius:20px;padding:2.5rem 2rem 3rem;max-height:calc(100vh - 2rem);overflow-y:auto;margin:0;position:relative;box-shadow:0 12px 40px rgba(26,18,8,.18)">
+    style="display:block;background:#fff;width:calc(100% - 2rem);max-width:520px;border-radius:20px;padding:2.5rem 2rem 3rem;max-height:calc(100vh - 2rem);overflow-y:auto;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 12px 40px rgba(26,18,8,.18);pointer-events:auto">
     <%= link_to "✕", products_path, class: "cart-modal-close", aria: { label: "Fermer" } %>
     <div class="cart-modal-title">Votre panier</div>
     <div class="cart-modal-sub">Récupération en boutique · <span data-bakery="adresse"></span></div>
