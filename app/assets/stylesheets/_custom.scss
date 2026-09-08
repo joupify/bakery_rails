@@ -97,6 +97,7 @@
       color: var(--mid);
       text-decoration: none;
       font-weight: 400;
+      white-space: nowrap;
       transition: color .2s
     }
 
@@ -122,6 +123,27 @@
 
     .nav-cart:hover {
       background: var(--orange-lt)
+    }
+
+    @media (min-width: 861px) and (max-width: 1400px) {
+     nav {
+       padding-left: 1.5rem;
+       padding-right: 1.5rem;
+     }
+
+     .nav-links {
+       gap: 1rem;
+     }
+
+     .nav-links a {
+       font-size: .82rem;
+       letter-spacing: .1em;
+     }
+
+     .nav-cart {
+       font-size: .85rem;
+       padding: .55rem 1rem;
+     }
     }
 
     .cart-badge {
@@ -753,6 +775,29 @@
       font-size: .93rem;
       color: var(--muted);
       margin-bottom: 2rem
+    }
+
+    @media(max-width:860px) {
+      .cart-modal-title {
+        font-size: 1.6rem;
+      }
+
+      .cart-modal-sub {
+        font-size: .85rem;
+        margin-bottom: 1.25rem;
+      }
+
+      .citem-name {
+        font-size: .95rem;
+      }
+
+      .citem-price {
+        font-size: .85rem;
+      }
+
+      .cart-total {
+        font-size: 1.15rem;
+      }
     }
 
     .cart-items {
