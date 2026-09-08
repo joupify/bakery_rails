@@ -722,20 +722,8 @@
     }
 
     /* MODAL */
-    .cart-modal {
-      display: block;
-      background: #fff;
-      width: 100%;
-      max-width: 520px;
-      border-radius: 20px 20px 0 0;
-      padding: 2.5rem 2rem 3rem;
-      height: auto;
-      max-height: 85vh;
-      overflow-y: auto;
-      margin: 0;
-      position: relative;
-      top: auto;
-      left: auto;
+    dialog.cart-modal::backdrop {
+      background: transparent;
     }
 
     .cart-modal-close {

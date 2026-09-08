@@ -1,51 +1,46 @@
 <!-- app/views/shared/_modal_cart.html.erb -->
 <!-- MODAL PANIER -->
 <div id="modal"
-  style="position:fixed;inset:0;background:none !important;backdrop-filter:none !important;filter:none !important;display:<%= local_assigns[:open] ? "block" : "none" %>;pointer-events:none">
-  <div class="cart-modal"
-    style="display:block;background:#fff;width:calc(100% - 2rem);max-width:520px;border-radius:20px;padding:2.5rem 2rem 3rem;max-height:calc(100vh - 2rem);overflow-y:auto;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 12px 40px rgba(26,18,8,.18);pointer-events:auto">
-    <%= link_to "✕", products_path, class: "cart-modal-close", aria: { label: "Fermer" } %>
-    <div class="cart-modal-title">Votre panier</div>
-    <div class="cart-modal-sub">Récupération en boutique · <span data-bakery="adresse"></span></div>
-    <% items = local_assigns.fetch(:items, @items || []) %>
-    <% total_cents = local_assigns.fetch(:total_cents, @total_cents || 0) %>
-    <div class="cart-items" id="citems">
-      <% if items.empty? %>
-        <p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">Votre panier est vide</p>
-      <% else %>
-        <% items.each do |item| %>
-          <article class="citem">
-            <div>
-              <div class="citem-name"><%= item.product.name %></div>
-              <div class="citem-price">
-                <%= number_to_currency(item.product.price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %>
-              </div>
+  style="display:<%= local_assigns[:open] ? "block" : "none" %>;background:#fff;width:calc(100% - 2rem);max-width:520px;border-radius:20px;padding:2rem;max-height:calc(100vh - 2rem);overflow-y:auto;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1000;box-shadow:0 12px 40px rgba(26,18,8,.18)">
+  <%= link_to "✕", products_path, class: "cart-modal-close", aria: { label: "Fermer" } %>
+  <div class="cart-modal-title">Votre panier</div>
+  <div class="cart-modal-sub">Récupération en boutique · <span data-bakery="adresse"></span></div>
+  <% items = local_assigns.fetch(:items, @items || []) %>
+  <% total_cents = local_assigns.fetch(:total_cents, @total_cents || 0) %>
+  <div class="cart-items" id="citems">
+    <% if items.empty? %>
+      <p style="color:var(--muted);font-size:.85rem;text-align:center;padding:2rem 0">Votre panier est vide</p>
+    <% else %>
+      <% items.each do |item| %>
+        <article class="citem">
+          <div>
+            <div class="citem-name"><%= item.product.name %></div>
+            <div class="citem-price">
+              <%= number_to_currency(item.product.price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %>
             </div>
-            <div class="qty">
-              <%= button_to "−", item.quantity > 1 ? update_quantity_cart_path(product_id: item.product_id, quantity: item.quantity - 1) : remove_item_cart_path(product_id: item.product_id),
-                method: item.quantity > 1 ? :patch : :delete, class: "qbtn" %>
-              <span class="qval"><%= item.quantity %></span>
-              <%= button_to "+", update_quantity_cart_path(product_id: item.product_id, quantity: item.quantity + 1),
-                method: :patch, class: "qbtn" %>
-            </div>
-          </article>
-        <% end %>
+          </div>
+          <div class="qty">
+            <%= button_to "−", item.quantity > 1 ? update_quantity_cart_path(product_id: item.product_id, quantity: item.quantity - 1) : remove_item_cart_path(product_id: item.product_id),
+              method: item.quantity > 1 ? :patch : :delete, class: "qbtn" %>
+            <span class="qval"><%= item.quantity %></span>
+            <%= button_to "+", update_quantity_cart_path(product_id: item.product_id, quantity: item.quantity + 1),
+              method: :patch, class: "qbtn" %>
+          </div>
+        </article>
       <% end %>
-    </div>
-    <div class="cart-total">
-      <span>Total</span>
-      <span id="ct"><%= number_to_currency(total_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %></span>
-    </div>
-    <%= link_to "Payer en ligne · Stripe →", new_reservation_path(payment_method: :stripe),
-      id: "sbtn", class: "stripe-btn" %>
-    <div class="stripe-note">
-      🔒 Paiement 100% sécurisé par Stripe — CB, Apple Pay, Google Pay
-    </div>
-    <div style="margin-top:1.5rem;text-align:center">
-      <%= link_to new_reservation_path,
-        style: "font-size:.72rem;color:var(--muted);text-decoration:underline" do %>
-        Ou réserver sans payer →
-      <% end %>
-    </div>
+    <% end %>
+  </div>
+  <div class="cart-total">
+    <span>Total</span>
+    <span id="ct"><%= number_to_currency(total_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %></span>
+  </div>
+  <%= link_to "Payer en ligne · Stripe →", new_reservation_path(payment_method: :stripe),
+    id: "sbtn", class: "stripe-btn" %>
+  <div class="stripe-note">
+    🔒 Paiement 100% sécurisé par Stripe — CB, Apple Pay, Google Pay
+  </div>
+  <div style="margin-top:1.5rem;text-align:center">
+    <%= link_to "Ou réserver sans payer →", new_reservation_path,
+      style: "font-size:.72rem;color:var(--muted);text-decoration:underline" %>
   </div>
 </div>
