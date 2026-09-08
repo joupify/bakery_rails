@@ -722,19 +722,6 @@
     }
 
     /* MODAL */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 500;
-      background: none;
-      pointer-events: none;
-    }
-
-    .modal-overlay.open {
-      display: flex
-    }
-
     .cart-modal {
       display: block;
       background: #fff;

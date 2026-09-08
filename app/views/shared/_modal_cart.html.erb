@@ -1,6 +1,6 @@
 <!-- app/views/shared/_modal_cart.html.erb -->
 <!-- MODAL PANIER -->
-<div class="modal-overlay <%= "open" if local_assigns[:open] %>" id="modal"
+<div id="modal"
   style="position:fixed;inset:0;background:none !important;backdrop-filter:none !important;filter:none !important;display:<%= local_assigns[:open] ? "block" : "none" %>;pointer-events:none">
   <div class="cart-modal"
     style="display:block;background:#fff;width:calc(100% - 2rem);max-width:520px;border-radius:20px;padding:2.5rem 2rem 3rem;max-height:calc(100vh - 2rem);overflow-y:auto;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 12px 40px rgba(26,18,8,.18);pointer-events:auto">
