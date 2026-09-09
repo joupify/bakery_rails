@@ -44,9 +44,8 @@
               <%= number_to_currency(product.price_cents / 100.0, unit: "€", separator: ",", format: "%n %u") %>
             </div>
             <%= button_to "+ Ajouter", add_product_cart_path(product_id: product.id),
-  method: :post, class: "btn-add", data: { turbo: true } %>
-          
-        </div>
+              method: :post, class: "btn-add", data: { turbo: true } %>
+                  </div>
       </article>
     <% end %>
   </div>

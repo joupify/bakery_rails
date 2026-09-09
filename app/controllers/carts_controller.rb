@@ -19,7 +19,7 @@ class CartsController < ApplicationController
     @cart.add_product(product.id)
 
     respond_to do |format|
-    format.turbo_stream { render "add_product", formats: [:turbo_stream] }
+    format.turbo_stream 
     format.html { redirect_to cart_path, notice: "Produit ajouté au panier." }
   end
   end
