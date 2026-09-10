@@ -24,4 +24,23 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+
+         after_commit :may_be_create_stripe_customer, on: [:create, :update]
+
+  def may_be_create_stripe_customer
+    return if !stripe_customer_id.blank?
+
+    customer = Stripe::Customer.create(
+      email: email,
+      name: name,
+      metadata: {
+      bakery_id: id
+      },
+
+      
+    )
+    update(stripe_customer_id: customer.id)  #update locally when come back from stripe
+  end
+
+
 end
