@@ -44,6 +44,8 @@ class Reservation < ApplicationRecord
   validates :pickup_time, presence: true
   validates :reservation_items, presence: true
   validate :pickup_time_during_business_hours
+  validate :pickup_time_within_delay
+
 
   private
 
@@ -52,10 +54,53 @@ class Reservation < ApplicationRecord
 
     pickup_time_of_day = pickup_time.seconds_since_midnight
     opening_time = 7.hours
-    closing_time = 19.hours
+    # Dernier créneau : 17h00 (2h avant la fermeture à 19h)
+    last_slot = 17.hours
 
-    unless pickup_time_of_day.between?(opening_time, closing_time)
-      errors.add(:pickup_time, "doit être compris entre 07h00 et 19h00")
+    unless pickup_time_of_day.between?(opening_time, last_slot)
+      errors.add(:pickup_time, "doit être compris entre 07h00 et 17h00")
     end
   end
+
+  def pickup_time_within_delay
+    return if pickup_time.blank?
+
+    # Le retrait doit être au moins 2h après la commande
+    if pickup_time < 2.hours.from_now
+      errors.add(:pickup_time, "doit être au moins 2h après la commande")
+    end
+  end
+
+  # Génération des créneaux
+  def self.available_pickup_hours(date = Date.current)
+    date = Date.parse(date.to_s) unless date.is_a?(Date)
+    base_date = date.in_time_zone.beginning_of_day
+    
+    # Si la date est dans le futur, tous les créneaux sont disponibles
+    if base_date.to_date > Date.current
+      return (7...17).flat_map { |hour| ["%02d:00" % hour, "%02d:30" % hour] } + ["17:00"]
+    end
+    
+    # Si c'est aujourd'hui, filtrer selon l'heure actuelle + 2h
+    min_time = 2.hours.from_now.in_time_zone
+    available_hours = []
+    
+    (7...17).each do |hour|
+      [0, 30].each do |minute|
+        slot_time = base_date.change(hour: hour, min: minute)
+        if slot_time >= min_time
+          available_hours << slot_time.strftime("%H:%M")
+        end
+      end
+    end
+    
+    # Ajouter 17:00 si disponible
+    last_slot = base_date.change(hour: 17, min: 0)
+    available_hours << "17:00" if last_slot >= min_time
+    
+    available_hours
+  end
+
 end
+
+

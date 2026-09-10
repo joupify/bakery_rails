@@ -33,6 +33,14 @@ réservation, paiement Stripe et confirmation par e-mail.
 - Kamal (déploiement)
 - Letter Opener (emails en développement)
 
+Fonctionnalités visibles
+✅ Historique des réservations
+✅ Statut (paid/pending)
+✅ Date de retrait
+✅ Mode de paiement (en ligne / en boutique)
+✅ Total
+✅ Produits commandés
+
 ## Fonctionnalités prévues pour les commerçants du quartier
 
 ### Fidélisation
@@ -89,6 +97,18 @@ réservation, paiement Stripe et confirmation par e-mail.
 - [ ] Page regroupant les offres du jour des commerces locaux.
 - [ ] Commandes groupées entre voisins.
 - [ ] Calendrier des événements du quartier.
+
+### Prochaines étapes possibles
+
+Tests automatisés (RSpec)
+
+Interface admin pour gérer les réservations
+
+Notifications (SMS, push)
+
+Statistiques (produits stars, CA)
+
+Déploiement final sur Render
 
 La priorité recommandée est de créer l'espace commerçant afin de transformer
 l'application en outil quotidien de gestion, au-delà d'une simple vitrine en ligne.
