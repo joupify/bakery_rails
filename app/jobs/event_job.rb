@@ -61,10 +61,9 @@ class EventJob < ApplicationJob
       Rails.logger.info "Payment Intent from Stripe: #{checkout_session.payment_intent}"
       Rails.logger.info "Metadata: #{checkout_session.metadata}"
       
-      # 🔥 CHANGEMENT 1: Utiliser Reservation au lieu de Order
       reservation = Reservation.find_by(stripe_session_id: checkout_session.id)
       
-      # 🔥 CHANGEMENT 2: Fallback via metadata
+      # Fallback via metadata
       if reservation.nil? && checkout_session.metadata && checkout_session.metadata.reservation_id
         reservation = Reservation.find_by(id: checkout_session.metadata.reservation_id)
         if reservation
@@ -77,14 +76,14 @@ class EventJob < ApplicationJob
         raise "Réservation non trouvée"
       end
 
-      # 🔥 CHANGEMENT 3: Vider le panier
+      # Vider le panier
       if reservation.user&.cart
         items_count = reservation.user.cart.items.count
         reservation.user.cart.items.destroy_all
         Rails.logger.info "Panier vidé pour la réservation #{reservation.id} (#{items_count} items supprimés)"
       end
 
-      # 🔥 CHANGEMENT 4: Mettre à jour le statut (paid au lieu de :paid)
+      # Mettre à jour le statut paid
       reservation.update!(status: :paid)
       Rails.logger.info "Réservation #{reservation.id} marquée comme payée"
       
@@ -92,7 +91,6 @@ class EventJob < ApplicationJob
 
     when "checkout.session.expired"
       checkout_session = event.data.object
-      # 🔥 CHANGEMENT: Reservation au lieu de Order
       reservation = Reservation.find_by(stripe_session_id: checkout_session.id)
       if reservation.nil?
         raise "No Reservation Found with Checkout Session ID: #{checkout_session.id}"
@@ -113,7 +111,6 @@ class EventJob < ApplicationJob
 
     when "charge.refunded"
       charge = event.data.object
-      # 🔥 CHANGEMENT: Reservation au lieu de Order
       reservation = Reservation.find_by(stripe_session_id: charge.payment_intent)
       if reservation.nil?
         raise "No Reservation Found with Payment Intent ID: #{charge.payment_intent}"
