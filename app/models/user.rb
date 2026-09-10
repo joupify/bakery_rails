@@ -27,20 +27,20 @@ class User < ApplicationRecord
 
          after_commit :may_be_create_stripe_customer, on: [:create, :update]
 
+  private
+
   def may_be_create_stripe_customer
-    return if !stripe_customer_id.blank?
+    return if stripe_customer_id.present?
 
     customer = Stripe::Customer.create(
       email: email,
       name: name,
-      metadata: {
-      bakery_id: id
-      },
-
-      
+      metadata: { bakery_id: id }
     )
-    update(stripe_customer_id: customer.id)  #update locally when come back from stripe
+    update_column(:stripe_customer_id, customer.id)
+  rescue Stripe::StripeError => e
+    Rails.logger.error "Erreur Stripe pour l'utilisateur #{id}: #{e.message}"
   end
-
+end
 
 end
