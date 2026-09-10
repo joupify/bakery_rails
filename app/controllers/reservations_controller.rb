@@ -56,28 +56,23 @@ class ReservationsController < ApplicationController
   end
 
   def checkout
-    reservation = current_user.reservations.find(params[:id])
-    checkout_session = Stripe::Checkout::Session.create(
-      mode: "payment",
-      line_items: reservation.reservation_items.includes(:product).map do |item|
-        {
-          price_data: {
-            currency: "eur",
-            product_data: { name: item.product.name },
-            unit_amount: item.unit_price_cents
-          },
-          quantity: item.quantity
-        }
-      end,
-      metadata: { reservation_id: reservation.id },
-      success_url: checkout_success_url + "?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: reservation_url(reservation)
-    )
+  reservation = current_user.reservations.find(params[:id])
+  checkout_session = Stripe::Checkout::Session.create(
+    mode: "payment",
+    line_items: reservation.reservation_items.includes(:product).map do |item|
+      {
+        price: item.product.stripe_price_id,
+        quantity: item.quantity
+      }
+    end,
+    metadata: { reservation_id: reservation.id },
+    success_url: checkout_success_url + "?session_id={CHECKOUT_SESSION_ID}",
+    cancel_url: reservation_url(reservation)
+  )
 
-    reservation.update!(stripe_session_id: checkout_session.id)
-    redirect_to checkout_session.url, allow_other_host: true
-  end
-
+  reservation.update!(stripe_session_id: checkout_session.id)
+  redirect_to checkout_session.url, allow_other_host: true
+end
   def checkout_success
     session_id = params[:session_id]
     reservation = Reservation.find_by(stripe_session_id: session_id)

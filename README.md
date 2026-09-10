@@ -3,6 +3,36 @@
 Application de commande en ligne pour les commerces de proximité, avec panier,
 réservation, paiement Stripe et confirmation par e-mail.
 
+## Fonctionnalités implementées
+
+- Authentification (Devise)
+- Panier (`has_one :cart`)
+- Réservations
+- Paiement en boutique
+- Paiement Stripe
+- Webhooks Stripe
+- Stripe Products
+- Stripe Prices
+- Stripe Customers
+- Vidage panier (Stripe)
+- Emails de confirmation
+- Page "Mes réservations"
+- Déploiement Render
+- Statistiques produits (Stripe)
+
+## Stack technique
+
+- Ruby on Rails 8.1
+- PostgreSQL
+- Stripe (paiements et webhooks)
+- Hotwire Turbo (interactions dynamiques)
+- Bootstrap 5 (interface responsive)
+- Active Storage (gestion des images)
+- Dotenv (gestion des variables d'environnement)
+- Devise (authentification)
+- Kamal (déploiement)
+- Letter Opener (emails en développement)
+
 ## Fonctionnalités prévues pour les commerçants du quartier
 
 ### Fidélisation

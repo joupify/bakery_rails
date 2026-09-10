@@ -41,6 +41,10 @@ class User < ApplicationRecord
   rescue Stripe::StripeError => e
     Rails.logger.error "Erreur Stripe pour l'utilisateur #{id}: #{e.message}"
   end
-end
+
+
+# Pourquoi ? update déclenche after_commit à nouveau, ce qui peut créer une boucle.
+
+
 
 end
