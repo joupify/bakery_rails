@@ -1,0 +1,77 @@
+<% pickup_date = params.dig(:reservation, :pickup_date).presence || @reservation&.pickup_time&.to_date || Date.current %>
+
+<div class="pickup-bar">
+  <%= form_with url: new_reservation_path, method: :get, local: true, class: "pickup-form" do |form| %>
+    <div class="pickup-mode">
+      <span class="toggle active">À emporter</span>
+    </div>
+
+    <div class="pickup-store">
+      <span class="pickup-icon" aria-hidden="true">⌖</span>
+      <span>Boulangerie Sainte Périne</span>
+    </div>
+
+    <label class="pickup-field pickup-date" aria-label="Date de retrait">
+      <%= form.date_field :pickup_date,
+        value: @reservation&.pickup_time&.to_date || Date.current,
+        class: "pickup-input pickup-date",
+        required: true,
+        min: Date.current,
+        name: "reservation[pickup_date]" %>
+    </label>
+
+    <label class="pickup-field pickup-hour" aria-label="Heure de retrait">
+      <%= form.select :pickup_hour,
+        options_for_select(
+          Reservation.available_pickup_hours(pickup_date),
+          @reservation&.pickup_time&.strftime("%H:%M")
+        ),
+        { prompt: "Choisir une heure" },
+        class: "pickup-input pickup-hour",
+        required: true,
+        name: "reservation[pickup_hour]" %>
+      </label>
+
+      <label class="pickup-field pickup-payment" aria-label="Mode de paiement">
+      <%= form.select :payment_method,
+        options_for_select(
+          [
+            ["💳 Paiement en ligne", "stripe"],
+            ["🏪 Paiement en boutique", "pay_at_store"]
+          ],
+          @reservation&.payment_method
+        ),
+        {},
+        class: "pickup-input pickup-payment",
+        name: "payment_method",
+        onchange: "this.form.submit()" %>
+    </label>
+  <% end %>
+
+</div>
+
+<script>
+  (() => {
+    const pickupBar = document.querySelector('.pickup-bar');
+    if (!pickupBar || pickupBar.dataset.hoursReady === 'true') return;
+
+    const dateInput = pickupBar.querySelector('input.pickup-date');
+    const hourInput = pickupBar.querySelector('select.pickup-hour');
+    if (!dateInput || !hourInput) return;
+
+    const today = '<%= Date.current %>';
+    const todayHours = <%= raw Reservation.available_pickup_hours(Date.current).to_json %>;
+    const futureHours = <%= raw Reservation.available_pickup_hours(Date.current + 1.day).to_json %>;
+
+    const updatePickupHours = () => {
+      const hours = dateInput.value === today ? todayHours : futureHours;
+      const selectedHour = hourInput.value;
+      hourInput.replaceChildren(new Option('Choisir une heure', ''));
+      hours.forEach((hour) => hourInput.add(new Option(hour, hour)));
+      if (hours.includes(selectedHour)) hourInput.value = selectedHour;
+    };
+
+    dateInput.addEventListener('change', updatePickupHours);
+    pickupBar.dataset.hoursReady = 'true';
+  })();
+</script>
