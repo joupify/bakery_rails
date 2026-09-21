@@ -70,6 +70,6 @@ gem "devise", "~> 5.0"
 
 gem "stripe", "~> 19.6"
 
-gem "annotaterb", "~> 4.24", :group => :development
+gem "annotaterb", "~> 4.25", :group => :development
 # Déploiement avec Kamal
 gem "kamal", "~> 2.0"
